@@ -60,13 +60,14 @@
             // 
             // btnIdentify
             // 
-            this.btnIdentify.Enabled = false;
+            this.btnIdentify.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnIdentify.Location = new System.Drawing.Point(312, 218);
             this.btnIdentify.Name = "btnIdentify";
             this.btnIdentify.Size = new System.Drawing.Size(174, 63);
             this.btnIdentify.TabIndex = 4;
             this.btnIdentify.Text = "Identify Areas";
             this.btnIdentify.UseVisualStyleBackColor = true;
+            this.btnIdentify.Click += new System.EventHandler(this.btnIdentify_Click);
             // 
             // btnFinding
             // 

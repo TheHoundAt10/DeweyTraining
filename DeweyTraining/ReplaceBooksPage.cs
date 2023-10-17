@@ -20,8 +20,11 @@ namespace DeweyTraining
 {
     public partial class ReplaceBooksPage : Form
     {
-        private IWavePlayer player; // Declare an IWavePlayer instance
-        private string temporaryFilePath1; // Store the path to the temporary audio file
+        private static readonly string resourceName = "DeweyTraining.Baby Elephant Walk 1 HOUR (128 kbps).mp3";
+        private static readonly Assembly assembly = Assembly.GetExecutingAssembly();
+        private static Stream mp3Stream;
+        private static IWavePlayer waveOutDevice;
+        private static WaveStream waveStream;
         public int moveCounter;
         List<string> deweyNumbersList = new List<string>();
 
@@ -29,56 +32,52 @@ namespace DeweyTraining
         {
             InitializeComponent();
             SetBackgroundImage();
-            InitializeMusic();
             moveCounter = 0;
             deweyNumbersList.Clear();
         }
 
-        private void InitializeMusic()
+        public static void PlayBackgroundMusic()
         {
-            player = new WaveOutEvent(); // Create a WaveOutEvent instance
+            mp3Stream = assembly.GetManifestResourceStream(resourceName);
 
-            string namespaceName = Assembly.GetExecutingAssembly().GetName().Name;
-            string resourceName = "DeweyTraining.Baby Elephant Walk 1 HOUR (128 kbps).mp3";
-
-            // Generate a random file name
-            string randomFileName = Guid.NewGuid().ToString() + ".mp3";
-            temporaryFilePath1 = Path.Combine(Path.GetTempPath(), randomFileName);
-
-            // Load the embedded resource and save it to a temporary file
-            using (Stream resourceStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))
-            using (FileStream fileStream = new FileStream(temporaryFilePath1, FileMode.Create))
+            if (mp3Stream != null)
             {
-                resourceStream.CopyTo(fileStream);
+                waveOutDevice = new WaveOutEvent();
+                waveStream = new Mp3FileReader(mp3Stream);
+                waveOutDevice.Init(waveStream);
+                waveOutDevice.Play();
+            }
+        }
+
+        public static void StopBackgroundMusic()
+        {
+            if (waveOutDevice != null)
+            {
+                waveOutDevice.Stop();
+                waveOutDevice.Dispose();
             }
 
-            // Initialize the player with the temporary audio file
-            player.Init(new AudioFileReader(temporaryFilePath1));
+            if (waveStream != null)
+            {
+                waveStream.Close();
+                waveStream.Dispose();
+            }
+
+            if (mp3Stream != null)
+            {
+                mp3Stream.Close();
+                mp3Stream.Dispose();
+            }
         }
 
         private void ReplaceBooksPage_FormClosed(object sender, FormClosedEventArgs e)
         {
-            // Stop the music when the form is closed
-            player.Stop();
-            player.Dispose();
-
-            // Try to delete the temporary audio file, handling any exceptions
-            try
-            {
-                File.Delete(temporaryFilePath1);
-            }
-            catch (IOException ex)
-            {
-                // Handle the exception or display an error message
-                MessageBox.Show("Error deleting temporary audio file: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-
-            
+            StopBackgroundMusic();
         }
 
         private void ReplaceBooksPage_Load(object sender, EventArgs e)
         {
-            player.Play();
+            PlayBackgroundMusic();
             // Show a message explaining the rules in a message dialog
             string rulesMessage = "Game Rules:\n\n" +
             "1. Objective:\n" +
@@ -697,14 +696,8 @@ namespace DeweyTraining
 
         private void button1_Click(object sender, EventArgs e)
         {
-            // Stop and dispose of the player
-            if (player != null)
-            {
-                player.Stop();
-                player.Dispose();
-            }
+            StopBackgroundMusic();
 
-            // Hide the form instead of closing it
             this.Close();
 
             // Open the MainPage form
@@ -753,7 +746,7 @@ namespace DeweyTraining
             // Check the user's response
             if (result == DialogResult.Yes)
             {
-                Environment.Exit(0);
+                Application.Exit();
             }
         }
     }

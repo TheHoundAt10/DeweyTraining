@@ -76,6 +76,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IdentifyAreasPage.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="IdentifyAreasPage.Designer.cs">
+      <DependentUpon>IdentifyAreasPage.cs</DependentUpon>
+    </Compile>
     <Compile Include="MainPage.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -90,6 +96,9 @@
     <Compile Include="ReplaceBooksPage.Designer.cs">
       <DependentUpon>ReplaceBooksPage.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="IdentifyAreasPage.resx">
+      <DependentUpon>IdentifyAreasPage.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MainPage.resx">
       <DependentUpon>MainPage.cs</DependentUpon>
     </EmbeddedResource>
@@ -179,6 +188,12 @@
       <Project>{b10b1fe0-d753-461b-b63b-f2b40702a93e}</Project>
       <Name>DeweyGeneratorLibrary</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="identifyAreasBack.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Welcome to fantasy land.mp3" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

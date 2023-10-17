@@ -127,8 +127,24 @@ namespace DeweyTraining
             // Check the user's response
             if (result == DialogResult.Yes)
             {
-                Environment.Exit(0);
+                Application.Exit();
             }
+        }
+
+        private void btnIdentify_Click(object sender, EventArgs e)
+        {
+            // Stop the music when the button is clicked
+            player.Stop();
+            player.Dispose();
+
+
+            this.Hide();
+
+            // Open the ReplaceBooksPage form
+            IdentifyAreasPage identifyAreasPage = new IdentifyAreasPage();
+            identifyAreasPage.Show();
+            MainPage mainPage = new MainPage();
+            mainPage.Close();
         }
     }
 }
